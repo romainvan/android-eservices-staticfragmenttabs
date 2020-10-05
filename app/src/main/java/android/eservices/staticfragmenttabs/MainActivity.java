@@ -3,12 +3,15 @@ package android.eservices.staticfragmenttabs;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.widget.ViewPager2;
 
-public class MainActivity extends AppCompatActivity {
+import com.google.android.material.tabs.TabLayout;
 
-    private ViewPager viewPager;
+public class MainActivity extends FragmentActivity {
+
+    private ViewPager2 viewPager;
+    private TabLayout tabLayout;
     private int currentCounter;
     private TextView counterTextView;
 
@@ -28,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         //TODO set adapter to viewpager and handle tragment change inside
         //viewpager.setAdapter(...);
 
+        //TabLayoutMediator tabLayoutMediator...
     }
 
     //TODO : increment and decrement counter, use the already provided String ressource (see strings.xml)
