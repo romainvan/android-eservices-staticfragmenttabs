@@ -3,16 +3,21 @@ package android.eservices.staticfragmenttabs;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
-public class MainActivity extends AppCompatActivity implements CounterInterface {
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
-    private ViewPager viewPager;
+public class MainActivity extends FragmentActivity implements CounterInterface {
+
+    private ViewPager2 viewPager;
     private int currentCounter;
     private TextView counterTextView;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,34 +30,37 @@ public class MainActivity extends AppCompatActivity implements CounterInterface 
     private void setupViewPagerAndTabs() {
         viewPager = findViewById(R.id.tab_viewpager);
         counterTextView = findViewById(R.id.counter_textview);
+        tabLayout = findViewById(R.id.tablayout);
 
         counterTextView.setText(getString(R.string.counter_text, currentCounter));
 
         final FragmentOne fragmentOne = FragmentOne.newInstance();
         final FragmentTwo fragmentTwo = FragmentTwo.newInstance();
 
-        viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+        viewPager.setAdapter(new FragmentStateAdapter(this) {
+
             @Override
-            public Fragment getItem(int position) {
+            public int getItemCount() {
+                return 2;
+            }
+
+            @NonNull
+            @Override
+            public Fragment createFragment(int position) {
                 if (position == 0) {
                     return fragmentOne;
                 }
                 return fragmentTwo;
             }
+        });
 
+        TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
-            public CharSequence getPageTitle(int position) {
-                if (position == 0) {
-                    return FragmentOne.TAB_NAME;
-                }
-                return FragmentTwo.TAB_NAME;
-            }
-
-            @Override
-            public int getCount() {
-                return 2;
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                tab.setText(position == 0 ? FragmentOne.TAB_NAME : FragmentTwo.TAB_NAME);
             }
         });
+        tabLayoutMediator.attach();
     }
 
     @Override
